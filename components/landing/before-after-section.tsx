@@ -21,26 +21,28 @@ const EXAMPLES = [
 
 export function BeforeAfterSection() {
   return (
-    <section className="py-24 md:py-32 bg-white">
-      <div className="max-w-7xl mx-auto px-6 md:px-16">
-        {/* Header */}
-        <div className="max-w-xl mb-14">
-          <span className="text-sm text-warm font-medium tracking-wide uppercase">
-            Ve la diferencia
-          </span>
-          <h2 className="font-serif text-4xl md:text-5xl font-bold mt-3 text-foreground">
-            La transformación,
-            <br />
-            en tiempo real.
-          </h2>
-          <p className="text-muted-foreground mt-4 leading-relaxed">
+    <section className="py-24 md:py-32 bg-background">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
+        {/* Header — 2-col editorial */}
+        <div className="grid md:grid-cols-[1fr_auto] items-end gap-8 mb-14 md:mb-16">
+          <div>
+            <span className="text-xs uppercase tracking-[0.2em] text-warm mb-4 block">
+              Ve la diferencia
+            </span>
+            <h2 className="font-serif italic text-4xl md:text-5xl font-bold text-foreground leading-tight">
+              La transformación,
+              <br />
+              en tiempo real.
+            </h2>
+          </div>
+          <p className="text-muted-foreground text-sm leading-relaxed max-w-xs md:text-right">
             Arrastra el deslizador para comparar la habitación original con el
             resultado generado por IA.
           </p>
         </div>
 
         {/* Sliders */}
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-3">
           {EXAMPLES.map((example) => (
             <div key={example.label} className="space-y-3">
               <BeforeAfterSlider
@@ -48,7 +50,7 @@ export function BeforeAfterSection() {
                 after={example.after}
                 className="aspect-[3/4]"
               />
-              <p className="text-sm text-muted-foreground font-medium">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">
                 {example.label}
               </p>
             </div>

@@ -1,79 +1,58 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
 
+// Luxury interior — full-bleed hero à la Poliform
 const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=1200&q=85"
+  "https://images.unsplash.com/photo-1618221941164-3f3d3b3e3f8f?auto=format&fit=crop&w=1800&q=90"
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen grid lg:grid-cols-2">
-      {/* Left — content */}
-      <div className="relative z-10 flex flex-col justify-center px-8 md:px-16 lg:px-20 py-32 bg-background">
-        {/* Tag */}
-        <span className="inline-flex items-center gap-2 text-sm text-warm font-medium mb-6 tracking-wide uppercase">
-          <span className="w-8 h-px bg-warm" />
-          Rediseño de interiores con IA
-        </span>
+    <section className="relative h-screen overflow-hidden">
+      {/* Background image — sangre */}
+      <Image
+        src={HERO_IMAGE}
+        alt="Habitación rediseñada con Décoriai"
+        fill
+        className="object-cover object-center"
+        priority
+        sizes="100vw"
+      />
 
-        {/* Headline */}
-        <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight text-foreground mb-6">
-          Tu habitación,
-          <br />
-          <em className="not-italic text-warm">reinventada.</em>
-        </h1>
+      {/* Dark gradient — bottom-heavy para leer el texto */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
 
-        {/* Sub */}
-        <p className="text-lg text-muted-foreground leading-relaxed max-w-md mb-10">
-          Sube una foto, elige un estilo y la IA transforma tu espacio en
-          segundos. Sin instalaciones, sin coste.
-        </p>
+      {/* Contenido — anclado en la parte inferior */}
+      <div className="absolute bottom-0 left-0 right-0 px-6 md:px-10 pb-14 md:pb-20">
+        <div className="max-w-7xl mx-auto">
+          {/* Eyebrow */}
+          <p className="text-white/50 text-xs uppercase tracking-[0.25em] mb-5">
+            Rediseño de interiores · Inteligencia Artificial
+          </p>
 
-        {/* CTA */}
-        <div className="flex flex-wrap items-center gap-4">
-          <Button size="lg" className="gap-2" asChild>
-            <Link href="/register">
-              Empieza gratis <ArrowRight className="h-4 w-4" />
+          {/* Headline grande — serif italic à la Poliform */}
+          <h1 className="font-serif italic text-white text-[clamp(3rem,8vw,7rem)] font-bold leading-[0.92] tracking-tight mb-8 max-w-4xl">
+            Tu espacio,
+            <br />
+            reinventado.
+          </h1>
+
+          {/* CTA row */}
+          <div className="flex flex-wrap items-center gap-4">
+            <Button
+              className="rounded-none px-8 h-12 bg-white text-foreground hover:bg-white/90 text-sm tracking-wide"
+              asChild
+            >
+              <Link href="/register">Empieza gratis</Link>
+            </Button>
+            <Link
+              href="#como-funciona"
+              className="text-white/60 text-sm hover:text-white transition-colors tracking-wide"
+            >
+              Cómo funciona ↓
             </Link>
-          </Button>
-          <Link
-            href="/login"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
-          >
-            Ya tengo cuenta
-          </Link>
+          </div>
         </div>
-
-        {/* Stats */}
-        <div className="flex items-center gap-6 mt-12 pt-8 border-t border-border">
-          {[
-            { value: "6", label: "estilos de diseño" },
-            { value: "~30s", label: "por generación" },
-            { value: "100%", label: "gratis" },
-          ].map((stat) => (
-            <div key={stat.label}>
-              <p className="font-serif text-2xl font-bold text-foreground">
-                {stat.value}
-              </p>
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Right — hero image */}
-      <div className="relative min-h-[50vh] lg:min-h-screen">
-        <Image
-          src={HERO_IMAGE}
-          alt="Habitación rediseñada con Décoriai"
-          fill
-          className="object-cover"
-          priority
-          sizes="(max-width: 1024px) 100vw, 50vw"
-        />
-        {/* Subtle overlay for blending */}
-        <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent lg:block hidden" />
       </div>
     </section>
   )
