@@ -18,14 +18,34 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Décoriai — Rediseña tu hogar con IA",
+  metadataBase: new URL("https://interior-ai-xi.vercel.app"),
+  title: {
+    default: "Décoriai — Rediseña tu hogar con IA",
+    template: "%s",
+  },
   description:
     "Sube una foto de tu habitación, elige un estilo y obtén el rediseño en segundos. Powered by AI.",
+  keywords: [
+    "diseño de interiores",
+    "inteligencia artificial",
+    "rediseño hogar",
+    "IA decoración",
+    "interior design AI",
+  ],
+  robots: { index: true, follow: true },
   openGraph: {
     title: "Décoriai — Rediseña tu hogar con IA",
     description:
       "Sube una foto de tu habitación, elige un estilo y obtén el rediseño en segundos.",
     type: "website",
+    siteName: "Décoriai",
+    locale: "es_ES",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Décoriai — Rediseña tu hogar con IA",
+    description:
+      "Sube una foto de tu habitación, elige un estilo y obtén el rediseño en segundos.",
   },
 }
 

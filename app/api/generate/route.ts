@@ -4,6 +4,15 @@ import { createClient } from "@/lib/supabase/server"
 import { STYLES } from "@/lib/constants/styles"
 
 export async function POST(request: Request) {
+  // Validar env vars críticas antes de cualquier cosa
+  if (!process.env.REPLICATE_API_TOKEN) {
+    console.error("[/api/generate] REPLICATE_API_TOKEN no está configurado")
+    return NextResponse.json(
+      { error: "Configuración del servidor incompleta." },
+      { status: 500 },
+    )
+  }
+
   const supabase = await createClient()
   const {
     data: { user },
@@ -51,18 +60,19 @@ export async function POST(request: Request) {
     .single()
 
   if (dbError || !generation) {
+    console.error("[/api/generate] DB insert error:", dbError?.message)
     return NextResponse.json(
-      { error: "Error al guardar la generación." },
+      { error: `Error al guardar la generación: ${dbError?.message ?? "unknown"}` },
       { status: 500 },
     )
   }
 
   // Crear predicción en Replicate (no-bloqueante — devuelve ID inmediatamente)
   try {
-    const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN! })
+    const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
 
     const prediction = await replicate.predictions.create({
-      model: "adirik/interior-design",
+      version: "76604baddc85b1b4616e1c6475eca080da339c8875bd4996705440484a6eac38",
       input: {
         image: inputImageUrl,
         prompt: fullPrompt,
@@ -82,18 +92,17 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ generationId: generation.id })
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.error("[/api/generate] Replicate error:", message)
+
     // Marcar como fallido si Replicate falla al crear la predicción
     await supabase
       .from("generations")
-      .update({
-        status: "failed",
-        error_message:
-          err instanceof Error ? err.message : "Error en Replicate",
-      })
+      .update({ status: "failed", error_message: message })
       .eq("id", generation.id)
 
     return NextResponse.json(
-      { error: "Error al iniciar la generación." },
+      { error: `Error en Replicate: ${message}` },
       { status: 500 },
     )
   }

@@ -3,7 +3,7 @@ export type Style = {
   name: string
   description: string
   promptBoost: string
-  photoId: string
+  image: string
 }
 
 export const STYLES: Style[] = [
@@ -13,7 +13,7 @@ export const STYLES: Style[] = [
     description: "Líneas limpias, paleta neutra, sin exceso",
     promptBoost:
       "minimalist interior, clean lines, neutral palette, uncluttered, white walls, modern",
-    photoId: "photo-1586023492125-27b2c045efd7",
+    image: "/images/minimalista.jpg",
   },
   {
     id: "nordico",
@@ -21,7 +21,7 @@ export const STYLES: Style[] = [
     description: "Madera clara, texturas acogedoras, paredes blancas",
     promptBoost:
       "scandinavian interior, light wood, cozy textures, white walls, hygge atmosphere",
-    photoId: "photo-1555041469-a586c61ea9bc",
+    image: "/images/nordico.jpg",
   },
   {
     id: "industrial",
@@ -29,7 +29,7 @@ export const STYLES: Style[] = [
     description: "Ladrillo visto, metal, materiales crudos",
     promptBoost:
       "industrial interior, exposed brick, metal accents, raw materials, loft style",
-    photoId: "photo-1558618666-fcd25c85cd64",
+    image: "/images/industrial.jpg",
   },
   {
     id: "mediterraneo",
@@ -37,7 +37,7 @@ export const STYLES: Style[] = [
     description: "Terracota cálida, arcos, luz natural",
     promptBoost:
       "mediterranean interior, warm terracotta, arched doorways, natural light, clay tiles",
-    photoId: "photo-1600585154526-990dced4db0d",
+    image: "/images/mediterraneo.jpg",
   },
   {
     id: "japandi",
@@ -45,7 +45,7 @@ export const STYLES: Style[] = [
     description: "Wabi-sabi, zen, materiales naturales",
     promptBoost:
       "japandi interior, wabi-sabi, zen atmosphere, natural materials, muted palette",
-    photoId: "photo-1615873968403-89e068629265",
+    image: "/images/japandi.jpg",
   },
   {
     id: "clasico",
@@ -53,7 +53,7 @@ export const STYLES: Style[] = [
     description: "Molduras elegantes, telas ricas, atemporal",
     promptBoost:
       "classic interior, elegant moldings, rich fabrics, timeless furniture, symmetrical",
-    photoId: "photo-1567016376408-0226e4d0c1ea",
+    image: "/images/clasico.jpg",
   },
 ]
 

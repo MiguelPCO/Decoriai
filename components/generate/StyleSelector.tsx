@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { STYLES, getUnsplashUrl } from "@/lib/constants/styles"
+import { STYLES } from "@/lib/constants/styles"
 import { cn } from "@/lib/utils"
 
 interface StyleSelectorProps {
@@ -32,7 +32,7 @@ export function StyleSelector({ value, onChange, disabled }: StyleSelectorProps)
             {/* Thumbnail */}
             <div className="relative aspect-[4/3] overflow-hidden">
               <Image
-                src={getUnsplashUrl(style.photoId, 400)}
+                src={style.image}
                 alt={style.name}
                 fill
                 className={cn(

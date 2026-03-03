@@ -1,22 +1,22 @@
 import Image from "next/image"
 import Link from "next/link"
-import { STYLES, getUnsplashUrl } from "@/lib/constants/styles"
+import { STYLES } from "@/lib/constants/styles"
 
 interface StyleCardProps {
   id: string
   name: string
   description: string
-  photoId: string
+  image: string
   className?: string
 }
 
-function StyleCard({ name, description, photoId, className = "" }: StyleCardProps) {
+function StyleCard({ name, description, image, className = "" }: StyleCardProps) {
   return (
     <div
       className={`group relative overflow-hidden bg-muted cursor-default ${className}`}
     >
       <Image
-        src={getUnsplashUrl(photoId, 800)}
+        src={image}
         alt={`Estilo ${name}`}
         fill
         className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"

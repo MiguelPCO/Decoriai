@@ -3,8 +3,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 // Luxury interior — full-bleed hero à la Poliform
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1618221941164-3f3d3b3e3f8f?auto=format&fit=crop&w=1800&q=90"
+const HERO_IMAGE = "/images/hero.jpg"
 
 export function Hero() {
   return (
