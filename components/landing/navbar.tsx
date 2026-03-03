@@ -39,7 +39,7 @@ export function Navbar() {
           <Link
             href="/login"
             className={cn(
-              "text-sm px-4 py-2 transition-colors",
+              "hidden sm:block text-sm px-4 py-2 transition-colors",
               scrolled
                 ? "text-muted-foreground hover:text-foreground"
                 : "text-white/70 hover:text-white",

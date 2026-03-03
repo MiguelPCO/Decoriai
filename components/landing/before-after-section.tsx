@@ -42,13 +42,16 @@ export function BeforeAfterSection() {
         </div>
 
         {/* Sliders */}
-        <div className="grid md:grid-cols-3 gap-3">
-          {EXAMPLES.map((example) => (
-            <div key={example.label} className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-3">
+          {EXAMPLES.map((example, i) => (
+            <div
+              key={example.label}
+              className={i === 2 ? "hidden md:block space-y-3" : "space-y-3"}
+            >
               <BeforeAfterSlider
                 before={example.before}
                 after={example.after}
-                className="aspect-[3/4]"
+                className="aspect-[4/3] md:aspect-[3/4]"
               />
               <p className="text-xs text-muted-foreground uppercase tracking-wide">
                 {example.label}

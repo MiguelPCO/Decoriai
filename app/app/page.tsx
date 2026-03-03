@@ -107,7 +107,7 @@ export default async function AppDashboard() {
               Ver todo →
             </Link>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {recent.map((gen) => {
               const styleName =
                 STYLES.find((s) => s.id === gen.style)?.name ??

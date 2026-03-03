@@ -67,8 +67,15 @@ export function StylesGrid() {
           </Link>
         </div>
 
-        {/* Bento grid — asimétrico à la Poliform */}
-        <div className="grid grid-cols-3 auto-rows-[260px] gap-3">
+        {/* Mobile — grid 2 columnas uniforme */}
+        <div className="md:hidden grid grid-cols-2 gap-3">
+          {STYLES.map((style) => (
+            <StyleCard key={style.id} {...style} className="aspect-[4/3]" />
+          ))}
+        </div>
+
+        {/* Desktop — bento asimétrico à la Poliform */}
+        <div className="hidden md:grid grid-cols-3 auto-rows-[260px] gap-3">
           {/* Minimalista — tall left (row-span-2) */}
           <StyleCard {...STYLES[0]} className="row-span-2" />
 
