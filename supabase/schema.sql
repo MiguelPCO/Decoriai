@@ -38,6 +38,35 @@ CREATE INDEX IF NOT EXISTS idx_generations_status
   ON generations(status)
   WHERE status IN ('pending', 'processing');
 
--- Storage buckets (ejecutar también en Supabase Storage)
--- Bucket: "generations" con acceso público para las imágenes generadas
--- INSERT INTO storage.buckets (id, name, public) VALUES ('generations', 'generations', true);
+-- ─────────────────────────────────────────────────────────────
+-- Storage (ejecutar en Supabase Storage + SQL Editor)
+-- ─────────────────────────────────────────────────────────────
+
+-- 1. Crear bucket público (desde la UI de Storage o con SQL)
+-- INSERT INTO storage.buckets (id, name, public)
+--   VALUES ('generations', 'generations', true)
+--   ON CONFLICT DO NOTHING;
+
+-- 2. RLS policies del bucket
+--    (las políticas de storage van en storage.objects)
+
+-- Usuarios autenticados pueden subir a su propia carpeta (user_id/)
+CREATE POLICY "storage: authenticated uploads"
+  ON storage.objects FOR INSERT TO authenticated
+  WITH CHECK (
+    bucket_id = 'generations' AND
+    auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+-- Lectura pública de todas las imágenes (bucket es público)
+CREATE POLICY "storage: public reads"
+  ON storage.objects FOR SELECT TO public
+  USING (bucket_id = 'generations');
+
+-- Los usuarios solo pueden borrar sus propias imágenes
+CREATE POLICY "storage: own deletes"
+  ON storage.objects FOR DELETE TO authenticated
+  USING (
+    bucket_id = 'generations' AND
+    auth.uid()::text = (storage.foldername(name))[1]
+  );
