@@ -28,7 +28,7 @@ export function CtaSection() {
           <div className="flex flex-col items-start md:items-end gap-4">
             <Button
               variant="secondary"
-              className="rounded-none bg-background text-foreground hover:bg-background/90 h-12 px-8 text-sm tracking-wide uppercase"
+              className="rounded-md bg-background text-foreground hover:bg-background/90 h-12 px-8 text-sm tracking-wide uppercase"
               asChild
             >
               <Link href="/register">Empieza gratis →</Link>

@@ -39,7 +39,7 @@ export function Hero() {
           {/* CTA row */}
           <div className="flex flex-wrap items-center gap-4">
             <Button
-              className="rounded-none px-8 h-12 bg-white text-foreground hover:bg-white/90 text-sm tracking-wide"
+              className="rounded-md px-8 h-12 bg-white text-foreground hover:bg-white/90 text-sm tracking-wide"
               asChild
             >
               <Link href="/register">Empieza gratis</Link>

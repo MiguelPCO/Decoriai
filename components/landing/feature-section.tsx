@@ -44,7 +44,7 @@ export function FeatureSection() {
         </p>
 
         <Button
-          className="rounded-none w-fit px-8 h-11 text-sm tracking-wide"
+          className="rounded-md w-fit px-8 h-11 text-sm tracking-wide"
           asChild
         >
           <Link href="/register">Descubre los estilos</Link>

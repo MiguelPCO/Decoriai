@@ -107,7 +107,7 @@ export function Navbar() {
                   size="sm"
                   asChild
                   className={cn(
-                    "rounded-none px-5 h-9 text-xs tracking-wide uppercase",
+                    "rounded-md px-5 h-9 text-xs tracking-wide uppercase",
                     scrolled
                       ? "bg-foreground text-background hover:bg-foreground/90"
                       : "bg-white text-foreground hover:bg-white/90",
