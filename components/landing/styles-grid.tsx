@@ -69,7 +69,7 @@ export function StylesGrid() {
 
         {/* Mobile — grid 2 columnas uniforme */}
         <div className="md:hidden grid grid-cols-2 gap-3">
-          {STYLES.map((style) => (
+          {STYLES.slice(0, 18).map((style) => (
             <StyleCard key={style.id} {...style} className="aspect-[4/3]" />
           ))}
         </div>
