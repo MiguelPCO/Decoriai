@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { STYLES, STYLE_MIXES } from "@/lib/constants/styles"
+import { STYLES, parseMixValue } from "@/lib/constants/styles"
 import { cn } from "@/lib/utils"
 
 const LOADING_MESSAGES = [
@@ -18,14 +18,10 @@ const CURATED = [
   "/images/comedordespues.webp",
 ]
 
-type PageState = "idle" | "uploading" | "processing" | "done" | "error"
 
 interface StylePreviewProps {
   selectedStyleId: string | null
   isProcessing: boolean
-  pageState: PageState
-  outputImageUrl: string | null
-  inputImageUrl: string | null
 }
 
 export function StylePreview({
@@ -46,8 +42,11 @@ export function StylePreview({
     return () => clearInterval(t)
   }, [isProcessing])
 
-  const selectedMix = selectedStyleId ? STYLE_MIXES.find((m) => m.id === selectedStyleId) : null
-  const selectedStyle = !selectedMix && selectedStyleId ? STYLES.find((s) => s.id === selectedStyleId) : null
+  const parsedMix = selectedStyleId ? parseMixValue(selectedStyleId) : null
+  const mixStyleA = parsedMix ? STYLES.find((s) => s.id === parsedMix.idA) : null
+  const mixStyleB = parsedMix ? STYLES.find((s) => s.id === parsedMix.idB) : null
+  const selectedMix = parsedMix && mixStyleA && mixStyleB ? { mixStyleA, mixStyleB } : null
+  const selectedStyle = !parsedMix && selectedStyleId ? STYLES.find((s) => s.id === selectedStyleId) : null
 
   // ── Procesando ────────────────────────────────────────────────────────────
   if (isProcessing) {
@@ -92,28 +91,36 @@ export function StylePreview({
 
   // ── Mezcla seleccionada ───────────────────────────────────────────────────
   if (selectedMix) {
-    const mixStyles = selectedMix.styleIds
-      .map((id) => STYLES.find((s) => s.id === id))
-      .filter(Boolean) as typeof STYLES
+    const { mixStyleA, mixStyleB } = selectedMix
 
     return (
       <div className="flex flex-1 flex-col w-full h-full bg-[#1a1714] overflow-y-auto">
         <div className="px-10 pt-10 pb-6 shrink-0">
           <p className="text-xs uppercase tracking-[0.2em] text-warm/60 mb-1">Mezcla de estilos</p>
-          <h2 className="font-serif italic text-3xl font-bold text-white">{selectedMix.name}</h2>
-          <p className="text-sm text-white/50 mt-2">{selectedMix.description}</p>
-          <p className="text-xs text-warm/60 mt-1">{selectedMix.label}</p>
+          <h2 className="font-serif italic text-3xl font-bold text-white">
+            {mixStyleA.name} × {mixStyleB.name}
+          </h2>
+          <p className="text-sm text-white/50 mt-2">
+            Fusión de {mixStyleA.description.toLowerCase()} con {mixStyleB.description.toLowerCase()}.
+          </p>
         </div>
 
         {/* Dos imágenes lado a lado */}
         <div className="px-10 shrink-0 grid grid-cols-2 gap-2">
-          {mixStyles.map((s) => (
-            <div key={s.id} className="relative aspect-video overflow-hidden">
-              <Image src={s.image} alt={s.name} fill className="object-cover" sizes="25vw" />
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#1a1714] to-transparent" />
-              <p className="absolute bottom-2 left-3 font-serif italic text-sm text-white">{s.name}</p>
-            </div>
-          ))}
+          {[mixStyleA, mixStyleB].map((s) =>
+            s.image ? (
+              <div key={s.id} className="relative aspect-video overflow-hidden">
+                <Image src={s.image} alt={s.name} fill className="object-cover" sizes="25vw" />
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#1a1714] to-transparent" />
+                <p className="absolute bottom-2 left-3 font-serif italic text-sm text-white">{s.name}</p>
+              </div>
+            ) : (
+              <div key={s.id} className="relative aspect-video overflow-hidden bg-white/5 flex items-center justify-center">
+                <p className="font-serif italic text-2xl text-white/30">{s.name[0]}</p>
+                <p className="absolute bottom-2 left-3 font-serif italic text-sm text-white/60">{s.name}</p>
+              </div>
+            )
+          )}
         </div>
 
         {/* Grid curado de fondo */}
@@ -122,7 +129,7 @@ export function StylePreview({
           <div className="grid grid-cols-3 gap-2">
             {CURATED.map((src, i) => (
               <div
-                key={i}
+                key={src}
                 className={cn("relative overflow-hidden", i === 0 ? "aspect-[4/3]" : "aspect-square")}
               >
                 <Image
@@ -147,7 +154,7 @@ export function StylePreview({
         {/* Thumbnails tenues de fondo */}
         <div className="flex-1 grid grid-cols-3 grid-rows-1 min-h-0 opacity-20">
           {CURATED.map((src, i) => (
-            <div key={i} className="relative overflow-hidden">
+            <div key={src} className="relative overflow-hidden">
               <Image
                 src={src}
                 alt=""
@@ -215,7 +222,7 @@ export function StylePreview({
         <div className="grid grid-cols-3 gap-2">
           {CURATED.map((src, i) => (
             <div
-              key={i}
+              key={src}
               className={cn(
                 "relative overflow-hidden",
                 i === 0 ? "aspect-[4/3]" : "aspect-square",

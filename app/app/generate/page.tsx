@@ -10,7 +10,7 @@ import { StylePreview } from "@/components/generate/StylePreview"
 import { GenerationResult } from "@/components/generate/GenerationResult"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Textarea } from "@/components/ui/textarea"
-import { STYLES } from "@/lib/constants/styles"
+import { getStyleDisplayName } from "@/lib/constants/styles"
 import { cn } from "@/lib/utils"
 
 type PageState = "idle" | "uploading" | "processing" | "done" | "error"
@@ -87,7 +87,20 @@ export default function GeneratePage() {
   }
 
   function startPolling(generationId: string) {
+    const MAX_POLLS = 40 // 40 × 3s = 2 minutos máximo
+    let polls = 0
+
     pollingRef.current = setInterval(async () => {
+      polls++
+      if (polls > MAX_POLLS) {
+        clearInterval(pollingRef.current!)
+        pollingRef.current = null
+        setError("La generación tardó demasiado. Inténtalo de nuevo.")
+        setPageState("error")
+        toast.error("Tiempo de espera agotado.")
+        return
+      }
+
       try {
         const res = await fetch(`/api/generate/${generationId}`)
         const data = (await res.json()) as {
@@ -175,7 +188,7 @@ export default function GeneratePage() {
     })
   }
 
-  const selectedStyleName = STYLES.find((s) => s.id === selectedStyle)?.name ?? ""
+  const selectedStyleName = selectedStyle ? getStyleDisplayName(selectedStyle) : ""
 
   // ── Pantalla de resultado ──────────────────────────────────────────────────
   if (pageState === "done" && outputImageUrl) {
@@ -207,7 +220,7 @@ export default function GeneratePage() {
       </div>
 
       {/* Toggle de modo */}
-      <div className="flex border border-border mb-10">
+      <div className="flex border border-border mb-10 rounded-md overflow-hidden">
         <button
           type="button"
           onClick={() => handleModeChange("con-referencia")}
@@ -332,7 +345,7 @@ export default function GeneratePage() {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="w-full h-12 bg-foreground text-background text-sm uppercase tracking-wide hover:bg-foreground/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full h-12 bg-foreground text-background text-sm uppercase tracking-wide hover:bg-foreground/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed rounded-md"
         >
           {isProcessing ? "Generando..." : "Generar diseño →"}
         </button>
@@ -344,9 +357,6 @@ export default function GeneratePage() {
         <StylePreview
           selectedStyleId={selectedStyle}
           isProcessing={isProcessing}
-          pageState={pageState}
-          outputImageUrl={outputImageUrl}
-          inputImageUrl={inputImageUrl}
         />
       </div>
 

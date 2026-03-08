@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Sparkles } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
-import { STYLES } from "@/lib/constants/styles"
+import { STYLES, getStyleDisplayName } from "@/lib/constants/styles"
 
 export default async function AppDashboard() {
   const supabase = await createClient()
@@ -53,7 +53,7 @@ export default async function AppDashboard() {
         </div>
         <Link
           href="/app/generate"
-          className="shrink-0 inline-flex items-center gap-2 h-10 px-5 bg-foreground text-background text-xs uppercase tracking-wide hover:bg-foreground/90 transition-colors mb-1"
+          className="shrink-0 inline-flex items-center gap-2 h-10 px-5 bg-foreground text-background text-xs uppercase tracking-wide hover:bg-foreground/90 transition-colors mb-1 rounded-md"
         >
           <Sparkles className="h-3 w-3" />
           Nueva generación
@@ -83,7 +83,7 @@ export default async function AppDashboard() {
           <div className="w-px h-14 bg-border/60 mt-1" />
           <div>
             <p className="font-serif italic text-5xl font-bold text-foreground leading-none">
-              6
+              {STYLES.length}
             </p>
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mt-2">
               Estilos
@@ -108,10 +108,7 @@ export default async function AppDashboard() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {recent.map((gen) => {
-              const styleName =
-                STYLES.find((s) => s.id === gen.style)?.name ??
-                gen.style ??
-                ""
+              const styleName = getStyleDisplayName(gen.style ?? "")
               return (
                 <Link
                   key={gen.id}
@@ -157,7 +154,7 @@ export default async function AppDashboard() {
           </div>
           <Link
             href="/app/generate"
-            className="shrink-0 inline-flex items-center gap-2 h-11 px-8 bg-foreground text-background text-xs uppercase tracking-wide hover:bg-foreground/90 transition-colors"
+            className="shrink-0 inline-flex items-center gap-2 h-11 px-8 bg-foreground text-background text-xs uppercase tracking-wide hover:bg-foreground/90 transition-colors rounded-md"
           >
             <Sparkles className="h-3.5 w-3.5" />
             Nueva generación
@@ -167,21 +164,67 @@ export default async function AppDashboard() {
 
       {/* Empty state */}
       {!hasGenerations && (
-        <div className="border border-dashed border-border py-24 flex flex-col items-center justify-center text-center">
-          <p className="font-serif italic text-2xl text-muted-foreground mb-2">
-            Tu lienzo está en blanco.
-          </p>
-          <p className="text-sm text-muted-foreground mb-8 max-w-xs">
-            Sube una foto de tu habitación y elige un estilo para empezar a
-            transformarla.
-          </p>
-          <Link
-            href="/app/generate"
-            className="inline-flex items-center gap-2 h-11 px-8 bg-foreground text-background text-xs uppercase tracking-wide hover:bg-foreground/90 transition-colors"
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            Crear primera generación →
-          </Link>
+        <div className="space-y-8">
+          {/* Hero vacío con thumbnails de fondo */}
+          <div className="relative overflow-hidden rounded-md border border-border/60 min-h-[280px] flex flex-col items-center justify-center text-center p-10">
+            {/* Grid tenue de thumbnails al fondo */}
+            <div className="absolute inset-0 grid grid-cols-4 opacity-[0.12] pointer-events-none">
+              {STYLES.slice(0, 4).map((s) => (
+                <div key={s.id} className="relative overflow-hidden">
+                  <Image src={s.image} alt="" fill className="object-cover" sizes="20vw" />
+                </div>
+              ))}
+            </div>
+            {/* Overlay gradiente */}
+            <div className="absolute inset-0 bg-gradient-to-b from-background/60 to-background/90" />
+            {/* Contenido */}
+            <div className="relative z-10">
+              <p className="font-serif italic text-3xl font-bold text-foreground mb-2">
+                Tu lienzo está en blanco.
+              </p>
+              <p className="text-sm text-muted-foreground mb-8 max-w-xs">
+                Sube una foto de tu habitación y elige un estilo para empezar a transformarla.
+              </p>
+              <Link
+                href="/app/generate"
+                className="inline-flex items-center gap-2 h-11 px-8 bg-foreground text-background text-xs uppercase tracking-wide hover:bg-foreground/90 transition-colors rounded-md"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                Crear primera generación →
+              </Link>
+            </div>
+          </div>
+
+          {/* Catálogo preview — 6 estilos en 2 filas de 3 */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-xs uppercase tracking-[0.2em] text-warm">
+                Catálogo de estilos
+              </span>
+              <Link href="/app/generate" className="text-xs text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wide">
+                Explorar →
+              </Link>
+            </div>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+              {STYLES.slice(0, 6).map((style) => (
+                <Link key={style.id} href="/app/generate" className="group block">
+                  <div className="relative aspect-square overflow-hidden rounded-sm">
+                    <Image
+                      src={style.image}
+                      alt={style.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                      sizes="15vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <p className="absolute bottom-1.5 left-2 font-serif italic text-[10px] text-white leading-tight">
+                      {style.name}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>
